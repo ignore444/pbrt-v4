@@ -161,8 +161,10 @@ class RandomWalkIntegrator : public RayIntegrator {
             return Le;
 
         // Randomly sample direction leaving surface for random walk
-        Point2f u = sampler.Get2D();
-        Vector3f wp = SampleUniformSphere(u);
+        // (ux,uy) spherical coordinate , ux = [0,1] , uy = [0,1]
+        // -> 3d cartesian coordinate
+        Point2f u = sampler.Get2D();    
+        Vector3f wp = SampleUniformSphere(u);   // w' is chosen.
 
         // Evaluate BSDF at surface for sampled direction
         SampledSpectrum fcos = bsdf.f(wo, wp) * AbsDot(wp, isect.shading.n);
@@ -170,8 +172,8 @@ class RandomWalkIntegrator : public RayIntegrator {
             return Le;
 
         // Recursively trace ray to estimate incident radiance at surface
-        ray = isect.SpawnRay(wp);
-        return Le + fcos * LiRandomWalk(ray, lambda, sampler, scratchBuffer, depth + 1) /
+        RayDifferential newRandomRay = isect.SpawnRay(wp);
+        return Le + fcos * LiRandomWalk(newRandomRay, lambda, sampler, scratchBuffer, depth + 1) /
                         (1 / (4 * Pi));
     }
 

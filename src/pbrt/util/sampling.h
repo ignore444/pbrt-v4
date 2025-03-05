@@ -66,7 +66,7 @@ Float SampleCatmullRom2D(pstd::span<const Float> nodes1, pstd::span<const Float>
 
 // Sampling Inline Functions
 PBRT_CPU_GPU inline Float BalanceHeuristic(int nf, Float fPdf, int ng, Float gPdf) {
-    return (nf * fPdf) / (nf * fPdf + ng * gPdf);
+    return (nf * fPdf) / (nf * fPdf + ng * gPdf);   // when f(x) has two products
 }
 
 PBRT_CPU_GPU inline Float PowerHeuristic(int nf, Float fPdf, int ng, Float gPdf) {
